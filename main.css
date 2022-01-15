@@ -1,0 +1,24 @@
+:root {
+  --main-tone1-color: #F43545;
+  --main-tone2-color: #FF8901;
+  --main-tone3-color: #FAD717;
+  --main-tone4-color: #00BA71;
+  --main-tone5-color: #00C2DE;
+  --main-tone6-color: #00418D;
+  --main-tone7-color: #5F2879;
+  --font-color: #484848;
+}
+
+html {
+  height: 100%;
+}
+
+body {
+  height: -webkit-fill-available;
+  margin: 0px;
+}
+
+input[type="button"] {
+  font-size: 15px;
+  font-family: sans-serif;
+}

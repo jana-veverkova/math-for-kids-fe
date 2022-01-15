@@ -1,0 +1,63 @@
+.game {
+  font-size: 30px;
+  font-family: cursive;
+  display: flex;
+  flex-flow: column nowrap;
+  height: -webkit-fill-available;
+  background-color: var(--main-tone1-color);
+  padding-top: 5px;
+}
+
+.task {
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+  align-items: center;
+  flex-grow: 1;
+  flex-shrink: 1;
+  align-self: center;
+  width: 1000px;
+  border-radius: 10px;
+  background-color: white;
+  padding: 10px;
+  margin: 10px;
+}
+
+.result-set {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
+  flex-grow: 0;
+  align-self: center;
+  width: 1000px;
+  border-radius: 10px;
+  background-color: white;
+  padding: 10px;
+  margin: 10px;
+  min-height: 70px;
+}
+
+.result-set > .element {
+  margin: 0px 3px;
+  cursor: pointer;
+  border: 1px solid var(--main-tone3-color);
+  padding: 10px 20px;
+}
+
+.result-set > .element:hover {
+  background-color: var(--main-tone3-color);
+}
+
+.element.selected {
+  background-color: var(--main-tone3-color);
+}
+
+.submit-panel {
+  height: 40px;
+  background-color: var(--main-tone4-color);
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  flex-direction: row-reverse;
+  padding: 20px;
+}

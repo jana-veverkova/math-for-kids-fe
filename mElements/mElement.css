@@ -1,0 +1,67 @@
+.tree {
+  background-image: url("../img/tree.png");
+}
+
+.bear {
+  background-image: url("../img/bear.png");
+}
+
+.cherry {
+  background-image: url("../img/cherry.png");
+}
+
+.picture {
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover;
+  -webkit-background-size: contain;
+  min-width: 30px;
+}
+
+.element {
+  padding: 20px;
+}
+
+.equation {
+  display: flex;
+  flex-flow: row nowrap;
+  height: -webkit-fill-available;
+}
+
+.equation .equation-left-side {
+  display: flex;
+  flex-flow: row nowrap;
+}
+
+.equation .equation-right-side {
+  display: flex;
+  flex-flow: row nowrap;
+}
+
+.expression {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+}
+
+.equals {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+}
+
+.series {
+  display: flex;
+  flex-flow: row nowrap;
+}
+
+.series .element {
+  padding: 10px 20px;
+}
+
+.set {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-evenly;
+  height: -webkit-fill-available;
+}

@@ -1,0 +1,16 @@
+﻿input[type="button"] {
+  cursor: pointer;
+  position: relative;
+  text-align: right;
+  border-radius: 5px;
+  padding: 10px 20px;
+  background-color: white;
+  border: none;
+  color: black;
+  color: var(--main-tone5-color);
+}
+
+    input[type="button"]:hover {
+        background-color: var(--main-tone5-color);
+        color: black;
+    }
