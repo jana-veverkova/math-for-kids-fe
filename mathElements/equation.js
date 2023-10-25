@@ -1,7 +1,5 @@
 define(function (require) {
 
-  var PageHelper = require("shared/pageHelper").PageHelper;
-
   const e = React.createElement;
 
   class Equation extends React.Component {
@@ -9,8 +7,6 @@ define(function (require) {
       super(props);
       this.leftSide = this.props.leftSide;
       this.rightSide = this.props.rightSide;
-
-      new PageHelper().addCssFile('mElements/mElement.css');
     }
 
     render() {

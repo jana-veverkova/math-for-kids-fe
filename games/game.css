@@ -1,11 +1,11 @@
 .game {
+  position: relative;
   font-size: 30px;
   font-family: cursive;
   display: flex;
   flex-flow: column nowrap;
   height: -webkit-fill-available;
-  background-color: var(--main-tone1-color);
-  padding-top: 5px;
+  padding: 30px;
 }
 
 .task {
@@ -16,11 +16,12 @@
   flex-grow: 1;
   flex-shrink: 1;
   align-self: center;
-  width: 1000px;
+  width: 100%;
   border-radius: 10px;
-  background-color: white;
   padding: 10px;
   margin: 10px;
+  font-size: xxx-large;
+  height: -webkit-fill-available;
 }
 
 .result-set {
@@ -29,35 +30,229 @@
   justify-content: center;
   flex-grow: 0;
   align-self: center;
-  width: 1000px;
+  width: 100%;
   border-radius: 10px;
   background-color: white;
   padding: 10px;
   margin: 10px;
-  min-height: 70px;
+  min-height: 80px;
 }
 
-.result-set > .element {
-  margin: 0px 3px;
-  cursor: pointer;
-  border: 1px solid var(--main-tone3-color);
-  padding: 10px 20px;
-}
-
-.result-set > .element:hover {
-  background-color: var(--main-tone3-color);
-}
-
-.element.selected {
-  background-color: var(--main-tone3-color);
-}
-
-.submit-panel {
-  height: 40px;
-  background-color: var(--main-tone4-color);
-  font-weight: bold;
+.result-set-item {
   display: flex;
   align-items: center;
-  flex-direction: row-reverse;
-  padding: 20px;
+  justify-content: center;
+  flex-grow: 1;
+  max-width: 80px;
+  border: 1px solid var(--resultSet-tone1-color);
+  margin: 0px 10px;
+  cursor: pointer;
+}
+
+.result-set-item:hover {
+  background-color: var(--resultSet-tone2-color);
+  border: 1px solid var(--resultSet-tone2-color);
+  color: white;
+}
+
+.result-set-item.active {
+  background-color: var(--resultSet-tone2-color);
+  border: 1px solid var(--resultSet-tone2-color);
+  color: white;
+}
+
+.pexeso {
+  align-items: center;
+}
+
+.pexeso .set {
+  max-width: 1000px;
+  flex-flow: column wrap;
+  max-height: 500px;
+  align-content: center;
+}
+
+.pexeso-card {
+  margin-bottom: 15px;
+  margin-right: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border: 3px solid;
+  border-radius: 15px;
+  box-shadow: 5px 5px #727272;
+  width: 125px;
+  height: 140px
+}
+
+.pexeso-card::before {
+  display: block;
+  padding-top: 100%;
+}
+
+.pexeso-card.back {
+  background-color: white;
+}
+
+@-webkit-keyframes redBackgroundFade {
+  0% { background-color: var(--red-tone); }
+  100% { background-color: #ea9797; }
+}
+
+.pexeso-card.wrong {
+  -webkit-animation-name: redBackgroundFade;
+  -webkit-animation-iteration-count: 1;
+  -webkit-animation-duration: 2s;
+}
+
+@-webkit-keyframes greenBackgroundFade {
+  0% { background-color: green; color: black; }
+  100% { background-color: transparent; color: transparent}
+}
+
+.pexeso-card.removed {
+  -webkit-animation-name: greenBackgroundFade;
+  -webkit-animation-iteration-count: 1;
+  -webkit-animation-duration: 3s;
+  border: 3px solid transparent !important;
+  background-color: transparent;
+  box-shadow: 5px 5px transparent;
+  color: transparent;
+  cursor: default;
+}
+
+.pexeso-card.hinted {
+  background-color: #00BA71;
+  color: green important!
+}
+
+.meadow-background .pexeso-card {
+  border-color: #7b55b6;
+}
+
+.meadow-background .pexeso-card.front {
+  background-color: #e5def1;
+}
+
+.meadow-background .pexeso-card.selected {
+  background-color: #7b55b6;
+  color: white;
+}
+
+.sky-background .pexeso-card {
+  border-color: #E44A0E;
+}
+
+.sky-background .pexeso-card.front {
+  background-color: #fac6b2;
+}
+
+.sky-background .pexeso-card.selected {
+  background-color: #E44A0E;
+  color: white;
+}
+
+.winter-background .pexeso-card {
+  border-color: #624b3a;
+}
+
+.winter-background .pexeso-card.front {
+  background-color: #e2d7ce;
+}
+
+.winter-background .pexeso-card.selected {
+  background-color: #624b3a;
+  color: white;
+}
+
+.sea-background .pexeso-card {
+  border-color: #d43b00;
+}
+
+.sea-background .pexeso-card.front {
+  background-color: #ffcab5;
+}
+
+.sea-background .pexeso-card.selected {
+  background-color: #d43b00;
+  color: white;
+}
+
+.venn-diagram-container {
+  height: -webkit-fill-available;
+  width: -webkit-fill-available;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+
+.venn-diagram .graph {
+  height: -webkit-fill-available;
+  width: -webkit-fill-available;
+  flex-grow: 1;
+  font-size: 30px;
+}
+
+.numbers-learning .set {
+  height: 80%;
+  width: 70%;
+}
+
+.numbers-learning .set .element {
+  padding: 0px;
+  flex-grow: 1;
+  flex-basis: 20%;
+}
+
+.numbers-comparing .expression {
+  width: 70%;
+  flex-grow: 1;
+}
+
+.numbers-comparing .set {
+  height: 90%;
+  width: 50%;
+  padding: 0px 20px;
+  align-content: center;
+  border: 1px solid #326675;
+  border-radius: 90px;
+}
+
+.numbers-comparing .set .element {
+padding: 0px;
+flex-grow: 1;
+flex-shrink: 1;
+flex-basis: 25%;
+width: 100px;
+height: 100px;
+}
+
+.logical-series .series {
+width: 100%;
+justify-content: center;
+}
+
+.logical-series .series .element {
+flex-shrink: 1;
+flex-basis: 100px;
+height: 100px;
+display: flex;
+align-items: center;
+justify-content: center;
+}
+
+.simple-equation .set .element {
+flex-basis: 50px;
+padding: 0px;
+margin: 0px;
+flex-shrink: 1;
+}
+
+.puzzle {
+
+}
+
+.puzzle .template {
+  background-color: blue;
 }

@@ -1,211 +1,138 @@
 define(function (require) {
 
   var Helper = require("shared/helper").Helper;
-  var PictureFactory = require("mElements/pictureFactory").PictureFactory;
-  var StringElement = require("mElements/stringElement").StringElement;
-  var Series = require("mElements/series").Series;
-  var Game = require("games/game").Game;
-  var Task = require("games/task").Task;
-  var ResultSet = require("games/resultSet").ResultSet;
+  var MotiveFactory = require("graphics/motiveFactory").MotiveFactory;
+  var StringElement = require("mathElements/stringElement").StringElement;
+  var Series = require("mathElements/series").Series;
+  var Task = require("games/components/task").Task;
+  var ResultSet = require("games/components/resultSet").ResultSet;
+  let RandomValuesGenerator = require("games/services/RandomValuesGenerator").RandomValuesGenerator;
 
   const e = React.createElement;
 
-  class LogicalSeriesReact extends React.Component {
+  class LogicalSeries extends React.Component {
     constructor(props) {
       super(props);
       this.helper = new Helper();
       this.rule = this.props.rules[this.helper.getRndInteger(0, this.props.rules.length-1)];
       this.elementsCount = 6;
+      this.resultSetSize = 5;
 
-      this.pictureFactory = new PictureFactory();
-      this.createGame();
-      this.createResultSet();
+      this.motive = (new MotiveFactory()).getRandomMotive();
+
+      this.randomValuesGenerator = new RandomValuesGenerator();
+
+      // game
+      // returns [series, answerIx]
+      this.game = this.createGame();
     }
 
     createGame() {
-      this.series = [];
+      var self = this;
+      var series = [];
 
-      for (var i = 0; i < this.elementsCount; i++) {
-        this.series = this.rule.apply(this.series);
+      for (var i = 0; i < self.elementsCount; i++) {
+        series = self.rule.apply(series);
       }
 
-      var resultIndex = this.helper.getRndInteger(0, this.elementsCount - 1);
-      this.answer = this.series[resultIndex];
-    }
+      var answerIx = self.helper.getRndInteger(0, self.elementsCount - 1);
+      var answer = series[answerIx];
 
-    createResultSet() {
-      this.resultSet = [];
+      let resultSetValues = [];
 
-      var indexOfResult = this.helper.getRndInteger(0, 4);
+      if (self.rule.isPictorial === true) {
+        resultSetValues = self.randomValuesGenerator.generate(
+          1,
+          self.motive.pictures.length,
+          Math.min(self.motive.pictures.length, self.resultSetSize));
+      } else {
+        resultSetValues = self.randomValuesGenerator.generate(self.rule.min, self.rule.max, self.resultSetSize);
+      }
 
-      var gameRange = [];
-      for (var i = this.min; i < this.max + 1; i++) {
-        if (this.answer != i) {
-          gameRange.push(i);
+      let ix = resultSetValues.indexOf(answer);
+      if (ix == -1) {
+        ix = this.helper.getRndInteger(0, resultSetValues.length - 1);
+        resultSetValues[ix] = answer;
+      }
+
+      return {
+        example: {series: series, answerIx: answerIx, answer: answer},
+        resultSet: {
+          values: resultSetValues,
+          answerIx: ix
         }
-      }
-
-      this.helper.shuffleArray(gameRange);
-
-      var j = 0;
-      for (var i = 0; i < 5; i++) {
-        if (i == indexOfResult) {
-          this.resultSet.push(this.answer);
-        } else {
-          this.resultSet.push(gameRange[i])
-        }
-      }
+      };
     }
 
     render() {
       var self = this;
       return e(
         'div',
-        { className: 'game' },
+        { className: `game logical-series ${this.motive.getBackgroundClass()}` },
           e(
             Task,
             { task: e(
               Series,
-              { elements: self.series.map(function(item) { return
-                  item == self.answer ? e(StringElement, { value: '?'}) : (
-                    self.rule.isPictorial ? self.pictureFactory.createPicture(item) :
-                      e(StringElement, { value: item })
+              { elements: self.game.example.series.map(function(item, index) {
+                    if (index == self.game.example.answerIx) {
+                      return e(StringElement, {key: 'element_' + index.toString(), value: '?'})
+                    } else if (self.rule.isPictorial) {
+                      return self.motive.createPicture(item, index)
+                    } else {
+                      return e(StringElement, {key: 'element_' + index.toString(), value: item})
+                    }
+                  }
                   )
                 })
               }
-            )}
-          ),
-          e(
-            ResultSet,
-            {
-              resultSet: this.resultSet.map(function(item) { return e(StringElement, { value: item }) }),
-              answer: this.answerValue
-            }
-          )
+            ),
+        e(
+          ResultSet,{
+            items: self.game.resultSet.values.map(
+              function(item, index) {
+                if (self.rule.isPictorial) {
+                  return self.motive.createPicture(item, index)
+                } else {
+                  return e(StringElement, {key: 'resultSetItem_' + index.toString(), value: item})
+                }
+              }
+            ),
+            answerIx: self.game.resultSet.answerIx,
+            ref: self.resultSetComponent
+          }
+        ),
+        e(
+          'div',
+          {className: `background-motive ${this.motive.getBackgroundMotiveClass()}`}
+        )
       )
     }
   }
 
-  function LogicalSeries(rules) {
-    this.helper = new Helper();
-    this.pictureFactory = new PictureFactory();
+  function RulesFactory() { }
 
-    this.rule = rules[this.helper.getRndInteger(0, rules.length-1)];
-    this.elementsCount = 6;
-
-    this.series = this.createSeries();
-
-    this.game = new Game();
-    this.container = this.game.container;
-    this.render();
+  RulesFactory.prototype.createRepeatingRule = function (min, max, isPictorial, skipMin, skipMax) {
+    return new RepeatingRule(min, max, isPictorial, skipMin, skipMax);
   }
 
-  LogicalSeries.prototype.render = function () {
-    var self = this;
-
-    self.game.addTask(self.createTask());
-    self.game.addResultSet(self.createResultSet());
-
-    self.game.addSubmitPanel(function () {
-      if (self.selected.value == self.result) {
-        self.game.win();
-      } else {
-        self.game.loose();
-      }
-    })
-  }
-
-  LogicalSeries.prototype.createSeries = function () {
-    var self = this;
-    var series = [];
-
-    for (var i = 0; i < self.elementsCount; i++) {
-      series = self.rule.apply(series);
-    }
-
-    return series;
-  }
-
-  LogicalSeries.prototype.createTask = function() {
-    var self = this;
-
-    var resultIndex = this.helper.getRndInteger(0, this.elementsCount - 1);
-
-    var series = new Series();
-    for(var i = 0; i < this.elementsCount; i ++) {
-      if (i == resultIndex) {
-        self.result = self.series[i];
-        series.addElement(new StringElement('?'));
-      } else {
-        if (self.rule.isPictorial) {
-          series.addElement(self.pictureFactory.createPicture(self.series[i]));
-        } else {
-          series.addElement(new StringElement(self.series[i]));
-        }
-      }
-    }
-
-    return series;
-  }
-
-  LogicalSeries.prototype.createResultSet = function () {
-    var self = this;
-
-    var resultSet = [];
-
-    const indexOfResult = self.helper.getRndInteger(0, 4);
-
-    var gameRange = [];
-    for (var i = self.rule.min; i < self.rule.max + 1; i++) {
-      if (self.result != i) {
-        gameRange.push(i);
-      }
-    }
-
-    self.helper.shuffleArray(gameRange);
-
-    var j = 0;
-    for (var i = 0; i < 5; i++) {
-      if (i == indexOfResult) {
-        if (self.rule.isPictorial) {
-          resultSet.push(self.pictureFactory.createPicture(self.result));
-        } else {
-          resultSet.push(new StringElement(self.result));
-        }
-      } else {
-        if (self.rule.isPictorial) {
-          resultSet.push(self.pictureFactory.createPicture(gameRange[i]));
-        } else {
-          resultSet.push(new StringElement(gameRange[i]))
-        }
-      }
-    }
-    return resultSet
-  }
-
-  function Rules() {
-  }
-
-  Rules.getRepeatingRule = function (min, max, isPictorial) {
-    return new RuleRepeating(min, max, isPictorial);
-  }
-
-  Rules.getIncreasingRule = function (min, max, minSkip, maxSkip) {
+  RulesFactory.prototype.createIncreasingRule = function (min, max, minSkip, maxSkip) {
     return new RuleIncreasing(min, max, minSkip, maxSkip);
   }
 
-  function RuleRepeating(min, max, isPictorial) {
+  function RepeatingRule(min, max, isPictorial, skipMin, skipMax) {
     this.min = min;
     this.max = max;
     this.isPictorial = isPictorial;
+
     this.helper = new Helper();
-    this.skip = this.helper.getRndInteger(1, 2);
+
+    this.skip = this.helper.getRndInteger(skipMin, skipMax);
   }
 
-  RuleRepeating.prototype.apply = function(series) {
+  RepeatingRule.prototype.apply = function(series) {
     var self = this;
 
-    if (series.length < self.skip + 1) {
+    if (series.length <= self.skip) {
       if (!self.isPictorial) {
         series.push(self.helper.getRndInteger(self.min, self.max));
       } else {
@@ -239,8 +166,8 @@ define(function (require) {
 
 
   return {
-    LogicalSeriesReact: LogicalSeriesReact,
-    Rules: Rules
+    LogicalSeries: LogicalSeries,
+    RulesFactory: RulesFactory
   }
 
 })

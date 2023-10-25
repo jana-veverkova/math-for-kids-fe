@@ -14,6 +14,17 @@ define(function (require) {
       array[i] = array[j];
       array[j] = temp;
     }
+    return array;
+  }
+
+  Helper.prototype.removeDuplicates = function(array) {
+    function onlyUnique(value, index, self) {
+      var ix = self.indexOf(value);
+      return ix === index;
+    }
+
+    var unique = array.filter(onlyUnique);
+    return unique;
   }
 
   return {

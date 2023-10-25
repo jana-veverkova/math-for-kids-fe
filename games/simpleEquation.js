@@ -1,13 +1,14 @@
 define(function (require) {
 
   var Helper = require("shared/helper").Helper;
-  var Equation = require("mElements/equation").Equation;
-  var Expression = require("mElements/expression").Expression;
-  var PictureFactory = require("mElements/pictureFactory").PictureFactory;
-  var StringElement = require("mElements/stringElement").StringElement;
-  var Set = require("mElements/set").Set;
-  var Task = require("games/task").Task;
-  var ResultSet = require("games/resultSet").ResultSet;
+  var Equation = require("mathElements/equation").Equation;
+  var Expression = require("mathElements/expression").Expression;
+  let MotiveFactory = require("graphics/motiveFactory").MotiveFactory;
+  var StringElement = require("mathElements/stringElement").StringElement;
+  var Set = require("mathElements/set").Set;
+  var Task = require("games/components/task").Task;
+  var ResultSet = require("games/components/resultSet").ResultSet;
+  let RandomValuesGenerator = require("games/services/RandomValuesGenerator").RandomValuesGenerator;
 
   const e = React.createElement;
 
@@ -17,99 +18,120 @@ define(function (require) {
       this.min = this.props.min;
       this.max = this.props.max;
       this.operators = this.props.operators;
+      // askResultOnly
+      // true - only the result of the equation is unknown variable
       this.askResultOnly = this.props.askResultOnly;
       this.isNumerical = this.props.isNumerical;
+      this.resultSetSize = 5;
 
-      this.pictureFactory = new PictureFactory();
-      this.createGame();
-      this.createResultSet();
+      this.motive = (new MotiveFactory()).getRandomMotive();
+      this.helper = new Helper();
+      this.randomValuesGenerator = new RandomValuesGenerator();
+
+      // game
+      this.game = this.createGame();
     }
 
     createGame() {
-      this.helper = new Helper();
+      var example = null;
 
-      this.operator = this.operators[this.helper.getRndInteger(0, this.operators.length - 1)];
+      var operator = this.operators[this.helper.getRndInteger(0, this.operators.length - 1)];
 
-      this.result = this.helper.getRndInteger(this.min, this.max);
-      this.firstNumber = this.helper.getRndInteger(this.min, this.result - 1);
-      this.secondNumber = this.result - this.firstNumber;
+      var value = this.helper.getRndInteger(this.min, this.max);
+      var firstNumber = this.helper.getRndInteger(this.min, value - 1);
+      var secondNumber = value - firstNumber;
 
-      if (this.operator == '-') {
-        var firstNumber = this.firstNumber;
-        var result = this.result;
-        this.firstNumber = result;
-        this.result = firstNumber;
+      var operands = [];
+      var result = null;
+      if (operator == '+') {
+        operands =  [firstNumber, secondNumber];
+        result = value;
+      } else if (operator == '-') {
+        operands = [value, firstNumber];
+        result = secondNumber;
       }
 
-      this.answer = this.askResultOnly ? 'result' :
-        ['firstNumber', 'secondNumber', 'result'][this.helper.getRndInteger(0, 2)];
-      this.answerValue = this.answer == 'firstNumber' ? this.firstNumber : (
-        this.answer == 'secondNumber' ? this.secondNumber : this.result
-      );
+      var operators = [operator];
+
+      // create answer
+
+      var answerIx = this.askResultOnly ? null : this.helper.getRndInteger(0, operands.length-1);
+      var answer = this.askResultOnly ? null : operands[answerIx];
+
+      let resultSetValues = this.randomValuesGenerator.generate(this.min, this.max, this.resultSetSize);
+
+      let ix = resultSetValues.indexOf(answer);
+      if (ix == -1) {
+        ix = this.helper.getRndInteger(0, resultSetValues.length - 1);
+        resultSetValues[ix] = answer;
+      }
+
+      return {
+        example:{ operands: operands, operators: [operator], result: result, answerIx: answerIx, answer: answer },
+        resultSet: {
+          values: resultSetValues,
+          answerIx: ix
+        }
+      };
     }
 
-    createResultSet() {
-      this.resultSet = [];
+    createLeftSideExpression() {
+      var self = this;
+      var result = [];
 
-      var indexOfResult = this.helper.getRndInteger(0, 4);
-
-      var gameRange = [];
-      for (var i = this.min; i < this.max + 1; i++) {
-        if (this.answerValue != i) {
-          gameRange.push(i);
-        }
-      }
-
-      this.helper.shuffleArray(gameRange);
-
-      var j = 0;
-      for (var i = 0; i < 5; i++) {
-        if (i == indexOfResult) {
-          this.resultSet.push(this.answerValue);
+      self.game.example.operands.forEach(function(operand, index) {
+        if (index == self.game.example.answerIx) {
+          result.push(e(StringElement, { key: 'element_' + index.toString(), value: '?' }));
+        } else if (self.isNumerical || operand == 0) {
+          result.push(e(StringElement, { key: 'element_' + index.toString(), value: operand }))
         } else {
-          this.resultSet.push(gameRange[i])
+          result.push(e(Set, { key: 'element_' + index.toString(), elements: Array(operand).fill(self.motive.createPicture(1))}));
         }
-      }
+
+        if (self.game.example.operators[index]) {
+          result.push(e(StringElement, { key: 'operator_' + index.toString(), value: self.game.example.operators[index] }));
+        }
+      })
+
+      return result;
     }
 
     render() {
       var self = this;
+
       return e(
         'div',
-        { className: 'game' },
+        { className: `game simple-equation ${this.motive.getBackgroundClass()}` },
+        e('div', self.game.example.operands),
         e(
           Task,
           { task: e(
             Equation,
               { leftSide: e(
                 Expression,
-                  { elements: [
-                      this.answer == 'firstNumber' ? e(StringElement, { key: 'firstNumber', value: '?' }) : (
-                        this.isNumerical ? e(StringElement, { key: 'firstNumber', value: this.firstNumber }) : (
-                          e(Set, {elements: Array(this.firstNumber).fill(self.pictureFactory.createPicture(1))})
-                        )
-                      ),
-                      e(StringElement, { key: 'operator', value: this.operator }),
-                      this.answer == 'secondNumber' ? e(StringElement, { key: 'secondNumber', value: '?' }) : (
-                        this.isNumerical ? e(StringElement, { key: 'secondNumber', value: this.firstNumber }) : (
-                          e(Set, {elements: Array(this.secondNumber).fill(self.pictureFactory.createPicture(1))})
-                        )
-                      )
-                    ]}
+                  { elements: this.createLeftSideExpression() }
                 ),
-                rightSide: this.isNumerical ? e(StringElement, { key: 'result', value: this.answer == 'result' ? '?' : this.result }) : (
-                    e(Set, {elements: Array(this.result).fill(self.pictureFactory.createPicture(1))})
+                rightSide: (this.isNumerical || this.game.example.result == 0) ? e(StringElement, { key: 'rightSideElement', value: this.askResultOnly ? '?' : this.game.example.result }) : (
+                    e(Set, {key: 'rightSideElement', elements: Array(this.game.example.result).fill(self.motive.createPicture(1))})
                   )
               }
             )
           }
         ),
         e(
-          ResultSet,
-          {
-            resultSet: this.resultSet.map(function(item) { return e(StringElement, { value: item }) }),
-            answer: this.answerValue
+          ResultSet,{
+            items: self.game.resultSet.values.map(
+              function(item, index) {
+                return e(StringElement, { key: 'resultSetItem_' + index.toString(), value: item})
+              }
+            ),
+            answerIx: self.game.resultSet.answerIx,
+            ref: self.resultSetComponent
           }
+        ),
+        e(
+          'div',
+          {className: `background-motive ${this.motive.getBackgroundMotiveClass()}`}
         )
       );
     }
@@ -120,3 +142,5 @@ define(function (require) {
   }
 
 })
+
+

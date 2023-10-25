@@ -1,0 +1,146 @@
+.tree {
+  background-image: url("img/tree.png");
+}
+
+.cherry {
+  background-image: url("img/cherry.png");
+}
+
+.snowman {
+  background-image: url("img/snowman.png");
+}
+
+.boat {
+  background-image: url("img/boat.png");
+}
+
+.iglu {
+  background-image: url("img/iglu.png");
+}
+
+.lighthouse {
+  background-image: url("img/lighthouse.png");
+}
+
+.flowers {
+  background-image: url("img/flowers.png");
+}
+
+.tree {
+  background-image: url("img/tree.png");
+}
+
+.mushroom {
+  background-image: url("img/mushroom.png");
+}
+
+.truck {
+  background-image: url("img/truck.png");
+}
+
+.duck {
+  background-image: url("img/duck.png");
+}
+
+.penguin {
+  background-image: url("img/penguin.png");
+}
+
+.train {
+  background-image: url("img/train.png");
+}
+
+.airballoon {
+  background-image: url("img/airballoon.png");
+}
+
+.snowflake {
+  background-image: url("img/snowflake.png");
+}
+
+.bear {
+  background-image: url("img/bear.png");
+}
+
+.cloud {
+  background-image: url("img/cloud.png");
+}
+
+.butterfly {
+  background-image: url("img/butterfly.png");
+}
+
+.snowyTree {
+  background-image: url("img/snowyTree.png");
+}
+
+.winterBear {
+  background-image: url("img/winterBear.png");
+}
+
+.octopus {
+  background-image: url("img/octopus.png");
+}
+
+.turtle {
+  background-image: url("img/turtle.png");
+}
+
+.whale {
+  background-image: url("img/whale.png");
+}
+
+.kite {
+  background-image: url("img/kite.png");
+}
+
+.plane {
+  background-image: url("img/plane.png");
+}
+
+.winter-background {
+  background-image: linear-gradient(0deg, #ecf1f4 100%, #00c2de 100%), linear-gradient(0deg, #48b2e5 -50%, #c8e0ec 60%);
+  background-position: bottom, top;
+  background-repeat: no-repeat;
+  background-size: 100% 80%, 100% 20%;
+}
+
+.sea-background {
+  background-image: linear-gradient(0deg, #23d7f1 20%, #00a0de 120%), linear-gradient(0deg, #d2f1f9 10%, #97e8fa 60%);
+  background-position: bottom, top;
+  background-repeat: no-repeat;
+  background-size: 100% 80%, 100% 20%;
+}
+
+.meadow-background {
+  background-image: linear-gradient(0deg, #90b655 10%, #afe35b 90%), linear-gradient(0deg, #d5fcff 30%, #0ea8e4 120%);
+  background-position: bottom, top;
+  background-repeat: no-repeat;
+  background-size: 100% 80%, 100% 20%;
+}
+
+.sky-background {
+  background-image: linear-gradient(0deg, #90b655 10%, #afe35b 90%), linear-gradient(0deg, #d5fcff 30%, #0ea8e4 120%);
+  background-position: bottom, top;
+  background-repeat: no-repeat;
+  background-size: 100% 25%, 100% 75%;
+}
+
+.background-motive {
+  position: absolute;
+  top: 35px;
+  right: 0%;
+  width: 20%;
+  height: 20%;
+  background-repeat: no-repeat;
+  background-position: bottom;
+  -webkit-background-size: contain;
+}
+
+.picture {
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover;
+  -webkit-background-size: contain;
+  min-width: 30px;
+}

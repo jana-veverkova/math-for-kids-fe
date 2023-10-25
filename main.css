@@ -1,12 +1,17 @@
 :root {
-  --main-tone1-color: #F43545;
+  --main-tone1-color: #cbf1fc;
   --main-tone2-color: #FF8901;
-  --main-tone3-color: #FAD717;
+  --main-tone3-color: #00418d;
   --main-tone4-color: #00BA71;
   --main-tone5-color: #00C2DE;
-  --main-tone6-color: #00418D;
-  --main-tone7-color: #5F2879;
-  --font-color: #484848;
+  --resultSet-tone1-color: #666666;
+  --resultSet-tone2-color: #808080;
+  --font-color: #232323;
+
+  --red-tone: #C7152E;
+  --green-tone: #2EC715;
+
+  --gametree-class-1: #FFA926;
 }
 
 html {
@@ -16,9 +21,17 @@ html {
 body {
   height: -webkit-fill-available;
   margin: 0px;
+  color: var(--font-color);
+}
+
+.dom-container {
+  height: -webkit-fill-available;
+  margin: 0px;
 }
 
 input[type="button"] {
   font-size: 15px;
   font-family: sans-serif;
 }
+
+

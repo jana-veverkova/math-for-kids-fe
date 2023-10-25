@@ -1,13 +1,9 @@
 define(function (require) {
 
-  var PageHelper = require("shared/pageHelper").PageHelper;
-
   class Expression extends React.Component {
     constructor(props) {
       super(props);
       this.elements = this.props.elements;
-
-      new PageHelper().addCssFile('mElements/mElement.css');
     }
 
     render() {

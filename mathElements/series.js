@@ -1,7 +1,5 @@
 define(function (require) {
 
-  var PageHelper = require("shared/pageHelper").PageHelper;
-
   const e = React.createElement;
 
   class Series extends React.Component {

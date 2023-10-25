@@ -1,0 +1,71 @@
+.game-sequence-runner {
+  height: -webkit-fill-available;
+  margin: 0px;
+}
+
+.game-tree-container {
+  display: flex;
+  height: 100%;
+  overflow: hidden;
+}
+
+.game-tree-box {
+  overflow-y: scroll;
+  height: 100%;
+  flex: 1;
+}
+
+.game-tree {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  min-height: min-content;
+  padding: 30px 20%;
+}
+
+.game-node {
+  width: 130px;
+  height: 130px;
+  cursor: pointer;
+  border-radius: 80px;
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover;
+  -webkit-background-size: contain;
+  min-width: 30px;
+  border: 1px solid black;
+  flex-basis: 130px;
+  flex-grow: 0;
+  flex-shrink: 0;
+}
+
+.game-node:nth-child(4n) {
+  align-self: flex-start;
+}
+
+.game-node:nth-child(4n+2) {
+  align-self: flex-end;
+}
+
+.game-tree-container .sidebar {
+  width: 200px;
+  background-color: #7b55b6;
+}
+
+.progress-bar-container {
+  display: flex;
+  flex-flow: row nowrap;
+  align-content: stretch;
+  justify-content: flex-start;
+  align-items: stretch;
+}
+
+.progress-bar {
+  border: 1px solid black;
+  margin-right: 10px;
+  border-radius: 25px;
+  background-color: orange;
+  flex-grow: 1;
+}
